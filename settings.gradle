@@ -13,5 +13,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "boida"
+rootProject.name = "Boida"
 include ':app'
