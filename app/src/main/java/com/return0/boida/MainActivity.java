@@ -1,9 +1,5 @@
 package com.return0.boida;
 
-import static java.lang.Thread.sleep;
-
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,12 +11,16 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
 
+    EngineApiRequest engineApiRequest = new EngineApiRequest();
     String TAG = "MainActivity";
 
     @Override
@@ -36,16 +36,22 @@ public class MainActivity extends AppCompatActivity {
         aiSwitch.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    geturl();
-                    aiSwitch.setVisibility(View.GONE);
-                    avatarview.setWebViewClient(webViewClient);
-                    avatarview.setVisibility(View.VISIBLE);
-                    closeButton.setVisibility(View.VISIBLE);
 
-                    avatarview.loadUrl("https://meta.bubblecell.win/");
-                    avatarview.getSettings().setUseWideViewPort(true); // wide viewport를 유연하게 설정하고
-                    avatarview.getSettings().setLoadWithOverviewMode(true); // 컨텐츠가 웹뷰 범위에 벗어날 경우  크기에 맞게 조절
+                try {
+                    String videoUrl = geturl().toString(); //변환을 시도할 Video URL
+
+                    if (engineApiRequest.apiRequest(videoUrl)) { // API 요청
+                        aiSwitch.setVisibility(View.GONE);
+                        avatarview.setWebViewClient(webViewClient);
+                        avatarview.setVisibility(View.VISIBLE);
+                        closeButton.setVisibility(View.VISIBLE);
+
+                        avatarview.loadUrl("https://meta.bubblecell.win/");
+                        avatarview.getSettings().setUseWideViewPort(true); // wide viewport를 유연하게 설정하고
+                        avatarview.getSettings().setLoadWithOverviewMode(true); // 컨텐츠가 웹뷰 범위에 벗어날 경우  크기에 맞게 조절
+                    } else {
+                        Toast.makeText(getApplicationContext(), "API Request Failed", Toast.LENGTH_SHORT).show();
+                    }
 
                 } catch (MalformedURLException e) {
                     throw new RuntimeException(e);
@@ -89,10 +95,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    void geturl() throws MalformedURLException {
+    URL geturl() throws MalformedURLException {
         WebView mainWebview2 = findViewById(R.id.mainWebView);
         URL url = new URL(mainWebview2.getOriginalUrl());
         Log.wtf(TAG, "URL HERE "+url);
+        return url;
     }
 
 
