@@ -32,16 +32,36 @@ public class MainActivity extends AppCompatActivity {
         WebView mainWebview = findViewById(R.id.mainWebView);
         WebView avatarview = findViewById(R.id.avatarView);
         Button aiSwitch = findViewById(R.id.aiSwitch);
+        Button closeButton = findViewById(R.id.close_button);
         aiSwitch.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
                     geturl();
+                    aiSwitch.setVisibility(View.GONE);
+                    avatarview.setWebViewClient(webViewClient);
+                    avatarview.setVisibility(View.VISIBLE);
+                    closeButton.setVisibility(View.VISIBLE);
+
+                    avatarview.loadUrl("https://meta.bubblecell.win/");
+                    avatarview.getSettings().setUseWideViewPort(true); // wide viewport를 유연하게 설정하고
+                    avatarview.getSettings().setLoadWithOverviewMode(true); // 컨텐츠가 웹뷰 범위에 벗어날 경우  크기에 맞게 조절
+
                 } catch (MalformedURLException e) {
                     throw new RuntimeException(e);
                 }
             }
         }) ;
+
+        closeButton.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                aiSwitch.setVisibility(View.VISIBLE);
+                avatarview.setVisibility(View.GONE);
+                closeButton.setVisibility(View.GONE);
+            }
+        }) ;
+
         mainWebview.setWebViewClient(webViewClient);
 //        mainWebview.setWebViewClient(new WebViewClient() {
 //            public boolean shouldOverrideUrlLoading(WebView view, String url){
@@ -62,7 +82,11 @@ public class MainActivity extends AppCompatActivity {
         avatarSettings.setJavaScriptEnabled(true);
 //        mainWebview.addJavascriptInterface(new WebAppInterface(this), "metaRemote");
         mainWebview.loadUrl("https://m.youtube.com");
-        avatarview.loadUrl("https://meta.notepads.cc");
+
+//        avatarview.loadUrl("https://m.youtube.com");
+
+
+
     }
 
     void geturl() throws MalformedURLException {
@@ -145,4 +169,7 @@ public class MainActivity extends AppCompatActivity {
         webView.loadUrl(url);
     }
 }
+
+
+
 
